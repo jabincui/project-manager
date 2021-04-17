@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>MyButler 请登录</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/sign-in/">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <!--    <link th:href="@{assets/dist/css/bootstrap.min.css}" rel="stylesheet">-->
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link th:href="@{signin.css}" rel="stylesheet">
+    <link href="css/signin.css" rel="stylesheet">
+
+</head>
+<body class="text-center">
+<div class = "container form-signin">
+    <!--    <img class="mb-4"-->
+    <!--         th:src="@{assets/brand/bootstrap-solid.svg}"-->
+    <!--         alt=""-->
+    <!--         width="72"-->
+    <!--         height="72">-->
+    <h5 class="text-danger">警告：本系统测试中，以防泄露请不要输入任何真实信息。测试期间暂不开放注册，
+        教师/学生登录邮箱/密码为123456/123456</h5>
+    <h1 id="sign_in_indicate" class="h3 mb-3 font-weight-normal">请登录</h1>
+    <div class="row mb-3">
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block" id="btn_iam_prof">我是教师</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block" id="btn_iam_stu">我是学生</button>
+        </div>
+    </div>
+    <label for="inputEmail" class="sr-only">账号</label>
+    <input type="email"
+           id="inputEmail"
+           class="form-control"
+           placeholder="工号"
+           required
+           autofocus>
+    <label for="inputPassword" class="sr-only">密码</label>
+
+    <input type="password"
+           id="inputPassword"
+           class="form-control"
+           placeholder="密码"
+           required>
+
+    <button id="sign_in" class="btn btn-lg btn-primary btn-block">登录</button>
+    <!--  <p class="mt-5 mb-3 text-muted">&copy;2017-2021</p>-->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script
+        src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script type = "text/javascript">
+    // const path = "https://oneapp.2linkq.com/pm/"
+    const path = "http://localhost:8050/"
+    const prof = 1, stu = 2;
+    let role = prof;
+
+    // alert("已加载");
+    $("#btn_iam_prof").click(function(){
+        role = prof
+        $("#sign_in_indicate").text("教师登录")
+        $("#inputEmail").attr("placeholder", "工号")
+    })
+    $("#btn_iam_stu").click(function() {
+        role = stu
+        $("#sign_in_indicate").text("学生登录")
+        $("#inputEmail").attr("placeholder", "学号")
+    })
+
+
+    $(function (){
+
+        const flag = document.cookie.indexOf("Authorization=");
+        if (flag !== -1) { // 已经有认证
+            signIn();
+        }
+
+        $("#sign_in").click(function() {
+            signIn();
+        });
+
+        function setCookie(c_name,value,expire_days){
+            const ex_date = new Date();
+            ex_date.setDate(ex_date.getDate() + expire_days);
+            document.cookie = c_name + "=" + escape(value) +
+                ((expire_days==null) ? "" : ";expires="+ex_date.toGMTString());
+        }
+
+        function signIn() {
+            $.ajax({
+                // url: "auth",
+                // WARNING 反复访问这个url会不会被cookie堆满内存
+                url: "login",
+                type: "GET",
+                dataType: "json",
+                headers: {
+                    username: $("#inputEmail").val(),
+                    password: $("#inputPassword").val(),
+                    role: role
+                },
+                success: function (data, status, xhr) {
+                    if (data === "2000") {
+                        localStorage.token = xhr.getResponseHeader("token");
+                        if (role === prof) window.location.href = "prof_index";
+                        else if (role === stu) window.location.href = "#";
+                    } else {
+                        alert("账号或密码不正确");
+                    }
+                }
+            });
+        }
+
+        function getCookie(cookieName) {
+            const strCookie = document.cookie;
+            const cookieList = strCookie.split(';');
+
+            for(let i = 0; i < cookieList.length; i++) {
+                const arr = cookieList[i].split('=');
+                if (cookieName === arr[0]) {
+                    return arr[1];
+                }
+            }
+            return 'nocookie';
+        }
+
+    })
+
+</script>
+</body>
+</html>
+

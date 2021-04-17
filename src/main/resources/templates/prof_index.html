@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <!--   datetimepicker -->
+    <link rel="stylesheet" type="text/css" href="datetimepicker-master/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{datetimepicker-master/jquery.datetimepicker.css}"/>
+
+    <title>Hello, world!</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="sticky-top">
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                世界上只有一种真正的英雄主义，那就是在认识生活的真相后依然热爱生活。
+                <br>帮助栏施工中，如果需要帮助/反馈bug请联系作者。
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+            <a class="navbar-brand" href="#">项目管理系统</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <!--                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
+                        导航栏施工中...
+                    </li>
+                </ul>
+
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button" data-toggle="collapse"
+                        data-target="#collapseExample" aria-expanded="false"
+                        aria-controls="collapseExample">
+                    帮助
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <div id="main" class="row">
+
+        <!--        左导航-->
+        <div class="col">
+            <!--                blue grey green red yellow lightblue white black-->
+            <!--                primary secondary success danger warning info light dark-->
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-primary">欢迎您：<span id="users_name">xxx</span></li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_new_proj" class="text-body" href="">项目立项</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_my_proj" class="text-body" href="#">我的项目</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_doc_template" class="text-body" href="#">文档模板</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_review_doc" class="text-body" href="#">审查文档</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_my_profile" class="text-body" href="#">我的信息</a>
+                </li>
+                <li class="list-group-item list-group-item-success invisible">
+                    <a id="btn_settings" class="text-body" href="#">设置</a>
+                </li>
+            </ul>
+        </div>
+
+        <!--        工作区-->
+        <div class="col-8">
+<!--            引导-->
+            <div class="text-center mb-2" id="view_intro">
+                <div class="mb-4"></div>
+                请点击左侧导航栏开始，如需帮助点击上方导航栏的“帮助”按钮
+            </div>
+        </div>
+
+        <!--        消息盒子-->
+        <div class="col">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">消息盒子</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>您现在没有消息哦</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="footer bg-white mt-auto py-3 fixed-bottom">
+        <div class="container">
+            <span class="text-muted">北京邮电大学电子工程学院通信与网络研究中心（2021）</span>
+        </div>
+    </footer>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/moment.js/2.29.1/moment.js"></script>-->
+<!--<script src="datetimepicker/assets/js/tempusdominus-bootstrap-4.js"></script>-->
+
+<!-- datetimepicker new -->
+<script src="datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+<script th:src="@{datetimepicker-master/build/jquery.datetimepicker.full.min.js}"></script>
+
+<script type="text/javascript">
+    $(function (){
+        let prof;
+
+        if (localStorage.getItem("token") == null) {
+            alert("您未登录, 点击确定跳转登录");
+            window.location.href = "/signin";
+        } else {
+            // alert(localStorage.token);
+            $.ajax({
+                url: "/prof/identity",
+                type: "GET",
+                dataType: "json",
+                headers: {
+                    Authorization: localStorage.token,
+                },
+                success: function (result) {
+                    alert("result" + result);
+                    prof = JSON.parse(result);
+                    alert(prof);
+                }
+            });
+        }
+
+        // const path = "http://localhost:8050"
+        $("#btn_new_proj").attr("href", "/new_proj");
+        $("#btn_my_proj").attr("href", "/my_proj");
+        $("#btn_doc_template").attr("href", "/doc_template");
+        $("#btn_review_doc").attr("href", "/review_doc");
+        $("#btn_my_profile").attr("href", "/my_profile");
+    });
+</script>
+</body>
+</html>
