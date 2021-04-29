@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <!--   datetimepicker -->
+    <link rel="stylesheet" type="text/css" href="datetimepicker-master/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{datetimepicker-master/jquery.datetimepicker.css}"/>
+
+    <script src="js/auto_signin.js"></script>
+    <script th:src="@{js/auto_signin.js}"></script>
+    <script src="js/my.js"></script>
+
+    <title>项目管理系统</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="sticky-top">
+<!--        帮助栏-->
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                世界上只有一种真正的英雄主义，那就是在认识生活的真相后依然热爱生活。
+                <br>帮助栏施工中，如果需要帮助/反馈bug请联系作者。
+            </div>
+        </div>
+
+<!--        导航栏-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+            <a class="navbar-brand" href="#">项目管理系统</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <!--                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
+                        导航栏施工中...
+                    </li>
+                </ul>
+
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button" data-toggle="collapse"
+                        data-target="#collapseExample" aria-expanded="false"
+                        aria-controls="collapseExample">
+                    帮助
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <div id="main" class="row">
+
+        <!--        左导航-->
+        <div class="col">
+            <!--                blue grey green red yellow lightblue white black-->
+            <!--                primary secondary success danger warning info light dark-->
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-primary">欢迎您：<span id="prof_name">xxx</span></li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_new_proj" class="text-body" href="#">项目立项</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_my_proj" class="text-body" href="#">我的项目</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_doc_template" class="text-body" href="#">文档模板</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_review_doc" class="text-body" href="#">审查文档</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_my_profile" class="text-body" href="#">我的信息</a>
+                </li>
+                <li class="list-group-item list-group-item-success invisible">
+                    <a id="btn_settings" class="text-body" href="#">设置</a>
+                </li>
+            </ul>
+        </div>
+
+        <!--        工作区-->
+        <div class="col-8">
+
+            <div id="no_proj" class="invisible">您还没有项目哦</div>
+
+            <!--    我的项目-->
+            <div class="container mb-2 invisible" id="view_my_proj">
+
+                <div class="form-inline mb-4">
+                    <label for="proj_name_search">项目名称</label>
+                    <input class="form-control ml-4" type="text" id="proj_name_search">
+                    <div class="dropdown ml-4">
+                        <button class="btn dropdown-toggle" type="button"
+                                id="btn_state_search" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                            项目状态
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btn_state_search">
+                            <a class="dropdown-item" href="#" id="choice0">项目状态</a>
+                            <a class="dropdown-item" href="#" id="choice1">准备中</a>
+                            <a class="dropdown-item" href="#" id="choice2">进行中</a>
+                            <a class="dropdown-item" href="#" id="choice3">已结束</a>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary ml-4" id="btn_select">检索</button>
+                    <button class="btn btn-dark ml-4" id="btn_rm_select">重置检索条件</button>
+                </div>
+
+                <div id="projects" class="table-responsive mb-2">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>项目名称</th>
+                            <th>负责人</th>
+                            <th>项目状态</th>
+                            <th>项目详情</th>
+                        </tr>
+                        </thead>
+                        <tbody id="proj_tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--        消息盒子-->
+        <div class="col">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">消息盒子</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>您现在没有消息哦</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="footer bg-white mt-auto py-3 fixed-bottom">
+        <div class="container">
+            <span class="text-muted">北京邮电大学电子工程学院通信与网络研究中心（2021）</span>
+        </div>
+    </footer>
+
+
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/moment.js/2.29.1/moment.js"></script>-->
+<!--<script src="datetimepicker/assets/js/tempusdominus-bootstrap-4.js"></script>-->
+
+<!-- datetimepicker new -->
+<script src="datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+<script th:src="@{datetimepicker-master/build/jquery.datetimepicker.full.min.js}"></script>
+
+<script type="text/javascript">
+    // $('#datetimepicker1').datetimepicker();
+    $(function (){
+        let env_path = "/pm";
+        // env_path = "";
+
+        let prof = auto_signin(env_path);
+        let projects, projAfterFilter = {};
+        $.ajax({
+            url: env_path + "/proj/myprojects",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            headers: {
+                Authorization: localStorage.token,
+            },
+            success: function(result) {
+                console.log(result.length);
+                projects = result;
+                initTable(projects);
+            }
+        });
+
+        initNav(env_path, prof);
+
+        function initTable(projects) {
+            if (projects.length === 0) {
+                $("#no_proj").removeClass("invisible");
+                return;
+            }
+            $("#proj_tbody").html("");
+            for (let i = 0; i < projects.length; i++) {
+                var state;
+                switch (projects[i].state) {
+                    case "0" : state = "准备中"; break;
+                    case "1" : state = "进行中"; break;
+                    case "2" : state = "已结束"; break;
+                    default : state = "数据异常"; break;
+                }
+                var row = "<tr id=\"tr" + i + "\">"
+                    + "<td>" + projects[i].name + "</td>"
+                    + "<td>" + prof.name + "</td>"
+                    + "<td>" + state + "</td>"
+                    + "<td><a href=' " + env_path + "/prof_proj?projId=" + projects[i].id + "'>进入</a></td>"
+                    + "</tr>";
+                $("#proj_tbody").append(row);
+                $("#view_my_proj").removeClass("invisible");
+            }
+        }
+
+        var state_search = -1;
+        $("#choice0").click(function (){
+            $("#btn_state_search").text($("#choice0").text());
+            state_search = -1;
+            console.log(state_search);
+        });
+
+        $("#choice1").click(function (){
+            $("#btn_state_search").text($("#choice1").text());
+            state_search = 0;
+            console.log(state_search);
+        });
+
+        $("#choice2").click(function (){
+            $("#btn_state_search").text($("#choice2").text());
+            state_search = 1;
+            console.log(state_search);
+        });
+
+        $("#choice3").click(function (){
+            $("#btn_state_search").text($("#choice3").text());
+            state_search = 2;
+            console.log(state_search);
+        });$("#btn_select").click(function () {
+            for (const project in projects) {
+                console.log(Object.keys(project));
+                if ((state_search === -1 || project.state === state_search)
+                    && project.name.includes($("#proj_name_search").val())) {
+                    projAfterFilter.append(project);
+                }
+            }
+            initTable(projAfterFilter);
+        });
+
+        $("#btn_rm_select").click(function (){
+            $("#proj_name_search").val("");
+            $("#btn_state_search").text($("#choice0").text());
+            state_search = -1;
+        });
+    });
+</script>
+</body>
+</html>

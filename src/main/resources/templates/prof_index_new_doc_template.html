@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <!--   datetimepicker -->
+    <link rel="stylesheet" type="text/css" href="datetimepicker-master/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/datetimepicker-master/jquery.datetimepicker.css}"/>
+
+    <title>项目管理系统</title>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div class="sticky-top">
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                世界上只有一种真正的英雄主义，那就是在认识生活的真相后依然热爱生活。
+                <br>帮助栏施工中，如果需要帮助/反馈bug请联系作者。
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+            <a class="navbar-brand" href="#">项目管理系统</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <!--                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
+                        导航栏施工中...
+                    </li>
+                </ul>
+
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button" data-toggle="collapse"
+                        data-target="#collapseExample" aria-expanded="false"
+                        aria-controls="collapseExample">
+                    帮助
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <div id="main" class="row">
+
+        <!--        左导航-->
+        <div class="col">
+            <!--                blue grey green red yellow lightblue white black-->
+            <!--                primary secondary success danger warning info light dark-->
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-primary">欢迎您：<span id="prof_name">xxx</span></li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_new_proj" class="text-body" href="#">项目立项</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_my_proj" class="text-body" href="#">我的项目</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_doc_template" class="text-body" href="#">文档模板</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_review_doc" class="text-body" href="#">审查文档</a>
+                </li>
+                <li class="list-group-item list-group-item-success">
+                    <a id="btn_my_profile" class="text-body" href="#">我的信息</a>
+                </li>
+                <li class="list-group-item list-group-item-success invisible">
+                    <a id="btn_settings" class="text-body" href="#">设置</a>
+                </li>
+            </ul>
+        </div>
+
+        <!--        工作区-->
+        <div class="col-8">
+            <!--                项目立项-->
+            <div class="container mb-2" id="view_new_proj">
+                <h2>新建模板</h2>
+                <div id="add_doctmlt" class="form-group row">
+                    <label for="doctmlt_type">文档类型</label>
+                    <input id="doctmlt_type" type="text" class="form-control mb-2"
+                           placeholder="请输入文档类型（限10字）" maxlength="10">
+                    <label for="doctmlt_expire">有效期</label>
+                    <input id = "doctmlt_expire" type="text" class="form-control"
+                           placeholder="点击选择有效期最后期限" />
+                    <form id="form_doctmlt_file" enctype="multipart/form-data"
+                          method="post" class="custom-file mt-2 mb-2">
+                        <input type="file" name="upload" class="custom-file-input" id="doctmlt_file" required>
+                        <label class="custom-file-label" for="doctmlt_file" id="lbl_doctmlt_file">
+                            选择文档模板
+                        </label>
+                    </form>
+                    <button id="confirm" type="submit" class="btn btn-primary" disabled="disabled">
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!--        消息盒子-->
+        <div class="col">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">消息盒子</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>您现在没有消息哦</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="footer bg-white mt-auto py-3 fixed-bottom">
+        <div class="container">
+            <span class="text-muted">北京邮电大学电子工程学院通信与网络研究中心（2021）</span>
+        </div>
+    </footer>
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/moment.js/2.29.1/moment.js"></script>-->
+<!--<script src="datetimepicker/assets/js/tempusdominus-bootstrap-4.js"></script>-->
+
+<!-- datetimepicker new -->
+<script src="datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+<script th:src="@{/datetimepicker-master/build/jquery.datetimepicker.full.min.js}"></script>
+<script src="js/auto_signin.js"></script>
+<script th:src="@{js/auto_signin.js}"></script>
+<script src="js/my.js"></script>
+
+<script type="text/javascript">
+    $(function (){
+        let env_path = "/pm";
+        // env_path = "";
+        const prof = auto_signin(env_path);
+        let docPath = "";
+
+        initNav(env_path, prof);
+
+        $("#doctmlt_expire").datetimepicker({
+            timepicker:false,
+            format:'Y-m-d',
+            minDate: 0
+        });
+        $.datetimepicker.setLocale('zh');
+
+
+        $("#doctmlt_file").change(function () {
+            const files = $("#doctmlt_file").prop("files");
+            // console.log(files[0]);
+            $("#lbl_doctmlt_file").text(files[0]["name"]);
+            upload();
+        });
+
+        $("#confirm").click(function (){
+            if ($("#doctmlt_type").val() === "") {
+                alert("请填写项目类型。");
+                return;
+            } else if (docPath === "") {
+                alert("请选择文档模板或等待上传完成");
+                return;
+            }
+            submit();
+        });
+
+
+
+        function upload() {
+            const formData = new FormData();
+            // console.log($("#doctmlt_file").prop("files"));
+            console.log($("#doctmlt_file")[0].files[0]);
+            formData.append("upload", $("#doctmlt_file")[0].files[0]);
+            $.ajax({
+                url: env_path + "/doc_template/upload?prof=" + prof.account,
+                type: "POST",
+                data: formData,
+                dataType: "text",
+                processData: false,
+                contentType: false,
+                headers: {
+                    Authorization: localStorage.token,
+                },
+                success: function (result, status) {
+                    console.log("result: " + result);
+                    // console.log("status: " + status);
+                    if (result === "EXIST") {
+                        alert("文件已存在");
+                    } else if (status === "success") {
+                        docPath = result;
+                        $("#confirm").attr("disabled", false);
+                    }
+                }
+            });
+        }
+
+        function submit() {
+            const data = JSON.stringify({
+                "type": $("#doctmlt_type").val(),
+                "expire": new Date($("#doctmlt_expire")
+                    .datetimepicker("getValue")).getTime(),
+                "profId": prof.account,
+                "docPath": docPath
+            });
+            $.ajax({
+                url: env_path + "/doc_template/add",
+                type: "POST",
+                data: data,
+                contentType: "application/json",
+                dataType: "text",
+                headers: {
+                    Authorization: localStorage.token,
+                },
+                success: function (result) {
+                    if (result === "INVALID_BODY") {
+                        alert("上传失败");
+                    }
+                    if (result === "PASS") {
+                        alert("新建模板成功，点击确定返回");
+                        window.location.href = env_path + "/my_doc_template?profId="
+                            + prof.account;
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
