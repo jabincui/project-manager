@@ -1,2 +1,4 @@
 # Project exclude paths
-/target/
+ppps-spring/target/
+.idea
+.mvn
