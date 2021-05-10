@@ -26,7 +26,7 @@ export default {
     modelValue: [Array, Object],
     placeholder: {
       type: String,
-      default: ' '
+      default: ' ',
     },
     multiple: Boolean,
     allowNew: Boolean,

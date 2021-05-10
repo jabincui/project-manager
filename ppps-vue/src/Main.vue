@@ -10,6 +10,14 @@
             <span>项目管理系统</span>
           </template>
           <!-- TODO:Insert Project system here. -->
+          <!-- Step3: Add a new menu item in UI.
+            Single item: <el-menu-item index="/path/to/your/component">A title</el-menu-item>
+            Item group:
+              <el-menu-item-group>
+                <template #title>A group name</template>
+                <el-menu-item index="/path/to/your/component">期刊会议搜索</el-menu-item>
+              </el-menu-item-group>
+           -->
         </el-submenu>
         <el-submenu index="2">
           <template #title>
@@ -17,6 +25,14 @@
             <span>专利管理系统</span>
           </template>
           <!-- TODO:Insert Patent system here. -->
+          <!-- Step3: Add a new menu item in UI.
+            Single item: <el-menu-item index="/path/to/your/component">A title</el-menu-item>
+            Item group:
+              <el-menu-item-group>
+                <template #title>A group name</template>
+                <el-menu-item index="/path/to/your/component">期刊会议搜索</el-menu-item>
+              </el-menu-item-group>
+            -->
         </el-submenu>
         <el-submenu index="3">
           <template #title>
@@ -42,9 +58,7 @@
         <span>欢迎你，观察者</span>
       </el-header>
       <el-main>
-        <el-scrollbar>
-          <router-view></router-view>
-        </el-scrollbar>
+        <router-view/>
       </el-main>
       <el-footer>北京邮电大学电子工程学院通信与网络研究中心（2021）</el-footer>
     </el-container>
@@ -82,6 +96,7 @@ html, body{
 }
 
 .el-main {
+  background-color: rgb(245, 248, 251)
 }
 
 </style>
