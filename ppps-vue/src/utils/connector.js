@@ -13,23 +13,32 @@ export function journalSave(valueDict, handleSuccess, handleError) {
 }
 
 export function journalListGet(query, resultFunc) {
-    if (query === undefined) query = '';
-    axios.get(`journal_list_get/?q=${query}`,
+    resultFunc(
+        [
+            {pk: 'j123', name: '期刊J', cover: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'},
+            {pk: 'j234', ename: 'JournalM', cover: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'},
+        ]
     )
-        .then(function (response) {
-            if (response.status === 200) {
-                console.info(response.data)
-                resultFunc(response.data)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-            resultFunc([])
-        })
 }
 
 export function journalRender(item) {
     return `${item.name === null ? item.ename : item.name}`
+}
+
+export function journalYVNGet(journal, resultFunc){
+    if(journal === 'j123'){
+        resultFunc([
+            {y: 2016, v: 23, n: 45},
+            {y: 2014, v: 25, n: 42},
+            {y: 2012, v: 26, n: 45},
+        ])
+    }else{
+        resultFunc([
+            {y: 2049, v: 23, n: 45},
+            {y: 2346, v: 45345, n: 42},
+            {y: 1243, v: 2453453456, n: 435345354335},
+        ])
+    }
 }
 
 export function rateListGet(query, resultFunc) {
@@ -58,7 +67,7 @@ export function authorListGet(query, option, resultFunc) {
         {pk: 1, name: '导师1'},
         {pk: 2, name: '导师2'},
         {pk: 3, name: '导师3'},
-        {pk: 4, name: `r+${query}`}
+        {pk: 4, name: `r${query}`}
     ])
 }
 
@@ -79,7 +88,8 @@ export function topicRender(item) {
 }
 
 export function topicBuilder(input) {
-    return {name: input}
+    var uniqid = require('uniqid');
+    return {pk: 'new'+uniqid(), name: input}
 }
 
 export function keywordListGet(query, resultFunc){
@@ -95,7 +105,8 @@ export function keywordRender(item) {
 }
 
 export function keywordBuilder(input) {
-    return {name: input}
+    var uniqid = require('uniqid');
+    return {pk: 'new'+uniqid() ,name: input}
 }
 
 export function projectListGet(query, resultFunc) {
@@ -113,8 +124,8 @@ export function projectRender(item) {
 export function outcomeListGet(query, resultFunc) {
     resultFunc([
         {pk: 1, name: '成果1'},
-        {pk: 2, name: '成果1'},
-        {pk: 3, name: '成果1'},
+        {pk: 2, name: '成果2'},
+        {pk: 3, name: '成果3'},
     ])
 }
 
@@ -135,7 +146,8 @@ export function typeRender(item) {
 }
 
 export function typeBuilder(input) {
-    return {name: input}
+    var uniqid = require('uniqid');
+    return {pk: 'new'+uniqid(), name: input}
 }
 
 
@@ -144,13 +156,19 @@ export function getDataByUid(input) {
     if (input === 'a00000001') {
         return {
             pk: 'a00000001',
-            thesisOrPaper: 'thesis',
+            tjc: 'thesis',
             title: '基于AAA的BBB在CCC上的DDD',
-            student: {pk: 1, name: '小明明'},
-            mentor: {pk: 2, name: '大明明'},
+            authors: [{
+                pk: 324234,
+                name: '小明明',
+                in_grade: 2016,
+                out_grade: 2020,
+                named_mentor: '大明明A',
+                proj_mentor: '大明明B'
+            }],
             type: {pk: 'type1', name: '理论'},
-            date: null,
-            rate: 23.4,
+            date: 1614700800000,
+            dup_rate: 23.4,
             intro: '这一次对话的间隔时间很长，字幕有二十分钟没有出现，伊文斯已经从船首踱到船尾了。他看到有一队鱼不断地从海里跃出，在海面上方划出一条在星光下银光闪闪的弧线。几年前，为了考察过度捕捞对沿海物种的影响，他曾经在南中国海的渔船上待过一段时间，渔民们把这种景象叫“龙兵过”，伊文斯现在感觉那很像映在海洋瞳孔上的字幕。这时，他自己眼睛中的字幕也出现了。',
             keywords: [
                 {pk: 'k000001', name: 'AAA'},
@@ -166,39 +184,47 @@ export function getDataByUid(input) {
                 {pk: 'p234456', name: '基于234456的654432'},
             ],
             outcomes: [
-                {pk: 'o12', name: 'o12'},
+                {pk: 'o12', name: 'o12', type: 'patent'},
             ],
+            full_path: '',
+            ppt: '',
             favor: false,
         };
     } else if (input === 'a00000002') {
         return {
             pk: 'a00000002',
-            thesisOrPaper: 'paper',
+            tjc: 'journal_paper',
             title: '基于EEE的FFF在GGG上的HHH',
-            author: [
+            authors: [
                 {pk: '000001', name: '小明明'},
                 {pk: '000002', name: '伊文斯'},
                 {pk: '000003', name: '大史'}
             ],
-            mentor: {pk: 'm00001', name: '大明明'},
-            comAuthors: [{pk: 'm00001', name: '大明明'}],
-            journal: {pk: 'j123', name: '期刊J'},
-            date: null,
+            comAuthors: [{pk: '000001', name: '小明明'}],
+            journal: {
+                pk: 'j123',
+                name: '期刊J',
+            },
+            yvn: {y: 2016, v: 23, n: 45},
+            page: 114,
+            home: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+            date: 1614700800000,
             intro: '罗辑伸手挥挥，像抚摸天鹅绒般感受着黑暗的质感，“宇宙就是一座黑暗深林，每个文明都是带枪的猎人，像幽灵般潜行于林间，轻轻拨开挡路的树枝，竭力不让脚步发出一点儿声音，连呼吸都小心翼翼，他必须小心，因为林中到处都有与他一样潜行的猎人。如果他发现了别的生命，不管是不是猎人，不管是天使还是恶魔，不管是娇嫩的婴儿还是步履蹒跚的老人，也不管是天仙般的少女还是天神般的男孩，能做的只有一件事：开枪消灭之。在这片深林中，他人就是地狱，就是永恒的威胁，任何暴露自己存在的生命都将很快被消灭。这就是宇宙文明的图景，这就是费米悖论的解释。”',
             keywords: [
-                {uid: 'k000004', name: 'DDD'},
-                {uid: 'k000005', name: 'EEE'},
-                {uid: 'k000006', name: 'FFF'},
+                {pk: 'k000004', name: 'DDD'},
+                {pk: 'k000005', name: 'EEE'},
+                {pk: 'k000006', name: 'FFF'},
             ],
             topics: [
-                {uid: 't000003', name: 'TTT3'},
-                {uid: 't000002', name: 'TTT2'},
+                {pk: 't000003', name: 'TTT3'},
+                {pk: 't000002', name: 'TTT2'},
             ],
-            with: {
-                withInduc: true,
-                withGov: false,
-                withInt: false,
-                withInterd: true,
+            joint: {
+                isInduct: true,
+                isGov: false,
+                isInter: false,
+                isKua: true,
+                inter: false,
             },
             projects: [
                 {pk: 'p123345', name: '基于123345的543321'},
@@ -209,6 +235,52 @@ export function getDataByUid(input) {
             ],
             favor: true,
         };
+    } else if( input === 'a00000003'){
+        return {
+            pk: 'a00000003',
+            tjc: 'conference_paper',
+            title: '基于CCC的FFF在GGG上的HHH',
+            authors: [
+                {pk: '000001', name: '小明明'},
+                {pk: '000002', name: '伊文斯'},
+                {pk: '000003', name: '大史'}
+            ],
+            comAuthors: [{pk: '000002', name: '伊文斯'}],
+            conference: {
+                pk: 'c123',
+                name: '会议C',
+            },
+            conference_year: 2013,
+            conference_locate: '波多黎各',
+            conference_date: 1614700800000,
+            page: 114,
+            date: 1614700800000,
+            intro: '罗辑伸手挥挥，像抚摸天鹅绒般感受着黑暗的质感，“宇宙就是一座黑暗深林，每个文明都是带枪的猎人，像幽灵般潜行于林间，轻轻拨开挡路的树枝，竭力不让脚步发出一点儿声音，连呼吸都小心翼翼，他必须小心，因为林中到处都有与他一样潜行的猎人。如果他发现了别的生命，不管是不是猎人，不管是天使还是恶魔，不管是娇嫩的婴儿还是步履蹒跚的老人，也不管是天仙般的少女还是天神般的男孩，能做的只有一件事：开枪消灭之。在这片深林中，他人就是地狱，就是永恒的威胁，任何暴露自己存在的生命都将很快被消灭。这就是宇宙文明的图景，这就是费米悖论的解释。”',
+            keywords: [
+                {pk: 'k000004', name: 'DDD'},
+                {pk: 'k000005', name: 'EEE'},
+                {pk: 'k000006', name: 'FFF'},
+            ],
+            topics: [
+                {pk: 't000003', name: 'TTT3'},
+                {pk: 't000002', name: 'TTT2'},
+            ],
+            joint: {
+                isInduct: true,
+                isGov: false,
+                isInter: false,
+                isKua: true,
+                inter: false,
+            },
+            projects: [
+                {pk: 'p123345', name: '基于123345的543321'},
+                {pk: 'p234456', name: '基于234456的654432'},
+            ],
+            outcomes: [
+                {pk: 'o12', name: 'o12'},
+            ],
+            favor: true,
+        }
     } else return null;
 }
 
@@ -216,7 +288,7 @@ export function getQueryResult() {
     return [
         {
             pk: 'a00000001',
-            tpc: 'thesis',
+            tjc: 'thesis',
             title: '基于AAA的BBB在CCC上的DDD',
             author: [{pk: '000001', name: '小明明'}],
             date: null,
@@ -230,7 +302,7 @@ export function getQueryResult() {
         },
         {
             pk: 'a00000002',
-            tpc: 'journal_paper',
+            tjc: 'journal_paper',
             title: '基于EEE的FFF在GGG上的HHH',
             author: [
                 {pk: '000001', name: '小明明'},
@@ -248,7 +320,7 @@ export function getQueryResult() {
         },
         {
             pk: 'a00000001',
-            tpc: 'thesis',
+            tjc: 'thesis',
             title: '基于AAA的BBB在CCC上的DDD',
             author: [{pk: '000001', name: '小明明'}],
             date: null,
@@ -261,8 +333,8 @@ export function getQueryResult() {
             favor: false,
         },
         {
-            pk: 'a00000002',
-            tpc: 'journal_paper',
+            pk: 'a00000003',
+            tjc: 'conference_paper',
             title: '基于EEE的FFF在GGG上的HHH',
             author: [
                 {pk: '000001', name: '小明明'},
@@ -280,7 +352,7 @@ export function getQueryResult() {
         },
         {
             pk: 'a00000001',
-            tpc: 'thesis',
+            tjc: 'thesis',
             title: '基于AAA的BBB在CCC上的DDD',
             author: [{pk: '000001', name: '小明明'}],
             date: null,
@@ -294,7 +366,7 @@ export function getQueryResult() {
         },
         {
             pk: 'a00000002',
-            tpc: 'journal_paper',
+            tjc: 'journal_paper',
             title: '基于EEE的FFF在GGG上的HHH',
             author: [
                 {pk: '000001', name: '小明明'},
@@ -312,7 +384,7 @@ export function getQueryResult() {
         },
         {
             pk: 'a00000001',
-            tpc: 'thesis',
+            tjc: 'thesis',
             title: '基于AAA的BBB在CCC上的DDD',
             author: [{pk: '000001', name: '小明明'}],
             date: null,
@@ -326,7 +398,7 @@ export function getQueryResult() {
         },
         {
             pk: 'a00000002',
-            tpc: 'journal_paper',
+            tjc: 'journal_paper',
             title: '基于EEE的FFF在GGG上的HHH',
             author: [
                 {pk: '000001', name: '小明明'},

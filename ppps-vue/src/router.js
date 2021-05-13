@@ -6,6 +6,7 @@ import Main from './Main.vue'
 // Patent: import Something from './components/patent/Something'
 // Paper: import Something from './components/paper/Something'
 import PaperSearch from './components/paper/PaperSearch'
+import PaperDetail from "./components/paper/PaperDetail";
 
 
 export const router = createRouter({
@@ -19,6 +20,7 @@ export const router = createRouter({
                 // Step2: Add your route here.
                 // Format: {path: 'path/to/your/components', component: <Component Name>}
                 { path: 'paper/search', component: PaperSearch },
+                { path: 'paper/search/:id', component: PaperDetail}
             ],
         }
     ],

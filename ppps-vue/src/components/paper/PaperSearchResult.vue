@@ -39,7 +39,7 @@ export default {
         journal_paper: "期刊论文",
         conference_paper: "会议论文"
       }
-      return valueDict[this.re_data.tpc]
+      return valueDict[this.re_data.tjc]
     },
   }
 }

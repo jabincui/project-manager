@@ -21,13 +21,13 @@
             <el-col :span="8">
               <el-form-item label="论文类型">
                 <el-select
-                    v-model="form.tpc"
+                    v-model="form.tjc"
                     multiple
                     reserve-keyword
                     placeholder="学位 | 期刊 | 会议"
                 >
                   <el-option
-                      v-for="item in tpc_options"
+                      v-for="item in tjc_options"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -116,6 +116,7 @@
         <el-space direction="vertical">
           <PaperSearchResult
               v-for="item in results"
+              @click="this.$router.push(`/paper/search/${item.pk}`)"
               :key="item.pk"
               :re_data="item"
           />
@@ -143,14 +144,14 @@ export default {
   data() {
     return {
       advance: false,
-      tpc_options: [
+      tjc_options: [
         {value: 'thesis', label: '学位论文'},
         {value: 'journal_paper', label: '期刊论文'},
         {value: 'conference_paper', label: '会议论文'},
       ],
       query: '',
       form: {
-        tpc: '',
+        tjc: '',
         date: null,
         mentors: [],
         firstAuthors: [],

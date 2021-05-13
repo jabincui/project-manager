@@ -234,16 +234,16 @@ Project Patent Paper System
   ```json
   {
       "pk": <论文编号>, 
-      "kind": 1, 
-      "author": {
+      "tjc": 'thesis', 
+      "authors": [{
       	"pk": <作者编号>, 
       	"name": <作者中文姓>+<作者中文名>, 
       	"in_grade": <入学年级>,
       	"out_grade": <毕业年级>,
       	"named_mentor": <录取导师中文姓>+<录取导师中文名>,
       	"proj_mentor": <项目导师中文姓>+<项目导师中文名>
-  	}, 
-  	"rate": <查重率>,
+  	}], 
+  	"dup_rate": <查重率>,
   	"date": <结题时间戳>,
   	"keywords": [
           {"pk": <关键词编号>, "name": <关键词>},
@@ -259,7 +259,7 @@ Project Patent Paper System
           {"pk": <成果编号>, "name"：<成果名称>, "type":<成果类型>}
       ],
   	"intro": <摘要>,
-  	"full": <原文链接>,
+  	"full_path": <原文链接>,
   	"ppt": <终期PPT链接>,
   	"favor": <是否为推荐论文>
   }
@@ -268,7 +268,7 @@ Project Patent Paper System
   ```json
   {
       "pk": <论文编号>, 
-      "kind": 2, 
+      "tjc": 'journal_paper', 
       "authors": [
           {
               "pk": <作者编号>, 
@@ -279,23 +279,22 @@ Project Patent Paper System
               "proj_mentor": <项目导师中文姓>+<项目导师中文名>
           },
   	],
-  	"com_author": {
-          "pk": <作者编号>, 
-          "name": <作者中文姓>+<作者中文名>, 
-          "in_grade": <入学年级>,
-          "out_grade": <毕业年级>,
-          "named_mentor": <录取导师中文姓>+<录取导师中文名>,
-          "proj_mentor": <项目导师中文姓>+<项目导师中文名>
-      },
+  	"com_authors": [
+          {
+              "pk": <作者编号>, 
+              "name": <作者中文姓>+<作者中文名>, 
+              "in_grade": <入学年级>,
+              "out_grade": <毕业年级>,
+              "named_mentor": <录取导师中文姓>+<录取导师中文名>,
+              "proj_mentor": <项目导师中文姓>+<项目导师中文名>
+      	},
+     	],
   	"journal": {
           "pk": <期刊编号>,
           "journal_name": <期刊名称>，
-          "rate": [
-          	{"pk": <评级编号>， "name": "<评级机构>:<评级>"}
-          ]
-          "yvn": [<年>, <卷>, <期>],
-  		"cover": <封面图片>,
       },
+  	"yvn": {y:<年>, v:<卷>, n:<期>},
+  	"cover": <封面图片>
   	"page": <页码>,
   	"home": <首页图片>,
   	"date": <发表时间戳>,
@@ -327,7 +326,7 @@ Project Patent Paper System
   ```json
   {
       "pk": <论文编号>, 
-      "kind": 3, 
+      "kind": 'conference_paper', 
       "authors": [
           {
               "pk": <作者编号>, 
