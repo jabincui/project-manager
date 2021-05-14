@@ -15,14 +15,14 @@ export function journalSave(valueDict, handleSuccess, handleError) {
 export function journalListGet(query, resultFunc) {
     resultFunc(
         [
-            {pk: 'j123', name: '期刊J', cover: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'},
-            {pk: 'j234', ename: 'JournalM', cover: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'},
+            {pk: 'j123', name: '期刊J', ename: null, short_name: 'wer'},
+            {pk: 'j234', name: null, ename: 'JournalM'},
         ]
     )
 }
 
 export function journalRender(item) {
-    return `${item.name === null ? item.ename : item.name}`
+    return `${!item.name ? item.ename : item.name}`
 }
 
 export function journalYVNGet(journal, resultFunc){

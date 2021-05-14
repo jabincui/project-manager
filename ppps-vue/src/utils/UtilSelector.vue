@@ -74,8 +74,10 @@ export default {
       let key_list = this.options.map(item => item.pk)
       if(this.modelValue instanceof Array){
         return this.options.concat(this.modelValue.filter(item => !key_list.includes(item.pk)))
-      }else{
+      }else if(this.modelValue){
         return this.options.concat([this.modelValue].filter(item => !key_list.includes(item.pk)))
+      }else{
+        return this.options
       }
     }
   },

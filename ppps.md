@@ -347,14 +347,11 @@ Project Patent Paper System
       },
   	"conference": {
           "pk": <会议编号>,
-          "conference_name": <会议名称>，
-          "rate": [
-          	{"pk": <评级编号>， "name": "<评级机构>:<评级>"}
-          ]
-          "year": <年>,
-  		"locat": <地点>,
-  		"date": <日期>,
+          "name": <会议名称>，
       },
+      "conference_year": <年>,
+  	"conference_locate": <地点>,
+  	"conference_date": <日期>,
   	"page": <页码>,
   	"date": <发表时间戳>,
   	"keywords": [

@@ -1,334 +1,340 @@
 <template>
-  <div>
+  <div style="display:flex; height:100%; flex-flow:column nowrap;">
     <div class="row">
       <el-page-header icon="el-icon-arrow-left" title="返回"
                       @back="$router.back()"
-                      content='论文详情'/>
+                      :content='this.$route.params.id === undefined ? `添加新论文` : `论文详情`'/>
     </div>
-    <el-card shadow="hover" class="row">
-      <el-descriptions class="row" :column="3" :title="title ? title : '论文详情'">
-        <template #title>
-          <el-space v-if="!edit">
-            <el-tag style="font-weight: normal;"> {{ getTypeName }}</el-tag>
-            <div class="header_text" style="font-weight: normal;"> {{ title ? title : '论文详情' }}</div>
-          </el-space>
-          <el-input v-if="edit" v-model="title"
-                    class="header_text" style="width:60vh; font-weight: normal;"
-                    placeholder="论文标题">
-            <template #prepend>
-              <el-select style="width: 120px;" v-model="tjc">
-                <el-option
-                    v-for="item in tjc_options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-input>
-        </template>
-        <template #extra>
-          <el-space>
-            <el-button type="primary" size="small" @click="handleSave" v-if="edit">保存</el-button>
-            <el-button type="primary" size="small" @click="toggleEdit" plain v-if="!edit">编辑</el-button>
-            <el-button type="info" size="small" @click="toggleEdit" v-if="edit">取消</el-button>
-            <el-button type="danger" size="small" plain>删除</el-button>
-          </el-space>
-        </template>
-        <el-descriptions-item label="论文编号">
-          <template v-if="!edit">{{ pk }}</template>
-          <el-input class="table-input" v-model="pk" size="small" v-if="edit"/>
-        </el-descriptions-item>
-        <el-descriptions-item :label="tjc === 'thesis' ? '结题时间' : '发表时间'" :span="1">
-          <template v-if="!edit">{{ `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` }}</template>
-          <el-date-picker v-if="edit" class="table-input" v-model="date"
-                          size="small"
-                          format="YYYY-M-D"/>
-        </el-descriptions-item>
-        <el-descriptions-item label="是否推荐" :span="1">
-          <template v-if="!edit"> {{ favor ? '是' : '否' }}</template>
-          <el-check-tag v-if="edit" @change="() => {this.favor = !this.favor}" :checked="favor"
-          >{{ favor ? '推荐' : '不推荐' }}
-          </el-check-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="作者" :span="3">
-          <el-space v-if="!edit">
-            <el-tag type="info"
-                    v-for="au in authors"
-                    :key="au.pk"
-            >
-              {{ au.name }}
-            </el-tag>
-          </el-space>
-          <UtilSelector class="table-input"
-                        :multiple="tjc !== 'thesis'"
-                        v-model="authors"
-                        :getter="callAuthorListGet"
-                        :render="callAuthorRender"
-                        v-if="edit" size="small"/>
-        </el-descriptions-item>
-        <el-descriptions-item label="研究方向" :span="3">
-          <el-space v-if="!edit">
-            <el-tag type="info"
-                    v-for="tp in topics"
-                    :key="tp.pk"
-            >
-              {{ tp.name }}
-            </el-tag>
-          </el-space>
-          <UtilSelector class="table-input" multiple allow-new
-                        v-model="topics"
-                        :getter="callTopicListGet"
-                        :render="callTopicRender"
-                        :builder="callTopicBuilder"
-                        v-if="edit" size="small"/>
-        </el-descriptions-item>
-        <el-descriptions-item label="关键词" :span="3">
-          <el-space v-if="!edit">
-            <el-tag type="info"
-                    v-for="kw in keywords"
-                    :key="kw.pk"
-            >
-              {{ kw.name }}
-            </el-tag>
-          </el-space>
-          <UtilSelector class="table-input" multiple allow-new
-                        v-model="keywords"
-                        :getter="callKeywordListGet"
-                        :render="callKeywordRender"
-                        :builder="callKeywordBuilder"
-                        v-if="edit" size="small"/>
-        </el-descriptions-item>
-      </el-descriptions>
-      <p class="main_text" v-if="!edit">
-        摘要：{{ intro }}
-      </p>
-      <div v-if="edit">
-        <p class="main_text">摘要：</p>
-        <el-input v-model="intro" type="textarea" :autosize="{minRows: 3}" clearable/>
-      </div>
-    </el-card>
-    <div class="row">
-      <el-card shadow="hover" v-if="tjc === 'thesis'">
-        <el-descriptions :column="4">
-          <el-descriptions-item label="录取导师">
-            <span v-if="!edit">{{ thesis_paper_detail.named_mentor }}</span>
-            <el-input class="table-input" v-model="thesis_paper_detail.named_mentor" size="small" v-if="edit" disabled/>
-          </el-descriptions-item>
-          <el-descriptions-item label="项目导师">
-            <span v-if="!edit">{{ thesis_paper_detail.proj_mentor }}</span>
-            <el-input class="table-input" v-model="thesis_paper_detail.proj_mentor" size="small" v-if="edit" disabled/>
-          </el-descriptions-item>
-          <el-descriptions-item label="查重率">
-            <span v-if="!edit"> {{ thesis_paper_detail.rate }}% </span>
-            <el-input class="table-input" v-model="thesis_paper_detail.rate" size="small" v-if="edit"/>
-          </el-descriptions-item>
-          <el-descriptions-item label="论文类型">
-            <span v-if="!edit"> {{ thesis_paper_detail.type ? thesis_paper_detail.type.name : '' }} </span>
-            <UtilSelector class="table-input"
-                          v-model="thesis_paper_detail.type"
-                          :getter="callTypeListGet"
-                          :render="callTypeRender"
-                          v-if="edit" size="small"/>
-          </el-descriptions-item>
-          <el-descriptions-item :span="4" label="原文链接">
-            <el-link type="primary" :href="full_path">{{ full_path }}</el-link>
-          </el-descriptions-item>
-          <el-descriptions-item :span="4" label="PPT链接">
-            <el-link type="primary" :href="thesis_paper_detail.ppt">{{ thesis_paper_detail.ppt }}</el-link>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
-      <el-card shadow="hover" v-if="tjc === 'journal_paper'">
-        <el-descriptions :column="4">
-          <el-descriptions-item label="通信作者" :span="4">
-            <el-space v-if="!edit">
-              <el-tag v-for="au in journal_paper_detail.com_authors"
-                      :key="au.pk"
-                      type="info"
-              >
-                {{ au.name }}
-              </el-tag>
-            </el-space>
-            <UtilSelector class="table-input" multiple
-                          v-model="journal_paper_detail.com_authors"
-                          :getter="(q, r) => r(this.authors)"
-                          :render="callAuthorRender"
-                          v-if="edit" size="small"/>
-          </el-descriptions-item>
-          <el-descriptions-item label="期刊名称">
-            <template v-if="!edit"> {{ journal_paper_detail.journal.name }}</template>
-            <UtilSelector class="table-input"
-                          v-model="journal_paper_detail.journal"
-                          :getter="callJournalListGet"
-                          :render="callJournalRender"
-                          v-if="edit" size="small"/>
-          </el-descriptions-item>
-          <el-descriptions-item label="年卷期" :span="2">
-            <template v-if="!edit">
-              {{ journal_paper_detail.journal_yvn.y }}年 第{{journal_paper_detail.journal_yvn.v }}卷 第{{ journal_paper_detail.journal_yvn.n }}期
-            </template>
-            <el-space class="table-input" v-if="edit">
-              <el-input v-model="journal_paper_detail.journal_yvn.y" size="small">
-                <template #suffix>年</template>
+    <div style="flex:1; overflow: hidden">
+      <el-scrollbar>
+        <el-card shadow="hover" class="row">
+          <el-descriptions class="row" :column="3" :title="title ? title : '未命名'">
+            <template #title>
+              <el-space v-if="!edit">
+                <el-tag style="font-weight: normal;"> {{ getTypeName }}</el-tag>
+                <div class="header_text" style="font-weight: normal;"> {{ title ? title : '论文详情' }}</div>
+              </el-space>
+              <el-input v-if="edit" v-model="title"
+                        class="header_text" style="width:60vh; font-weight: normal;"
+                        placeholder="论文标题">
+                <template #prepend>
+                  <el-select style="width: 120px;" v-model="tjc">
+                    <el-option
+                        v-for="item in tjc_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                  </el-select>
+                </template>
               </el-input>
-              <el-input v-model="journal_paper_detail.journal_yvn.v" size="small">
-                <template #prefix>第</template>
-                <template #suffix>卷</template>
-              </el-input>
-              <el-input v-model="journal_paper_detail.journal_yvn.n" size="small">
-                <template #prefix>第</template>
-                <template #suffix>期</template>
-              </el-input>
-            </el-space>
-          </el-descriptions-item>
-          <el-descriptions-item label="页码">
-            <template v-if="!edit"> {{journal_paper_detail.page}} </template>
-            <el-input class="table-input" v-if="edit" v-model="journal_paper_detail.page" size="small">
-            </el-input>
-          </el-descriptions-item>
-          <el-descriptions-item label="联合发表情况" :span="4">
-            <el-space v-if="!edit">
-              <el-tag v-for="jt in filterJoint"
-                      :key="jt"
-                      type="info"
-              >{{jt}}</el-tag>
-            </el-space>
-            <el-space v-if="edit">
-              <el-checkbox v-for="jt in Object.keys(journal_paper_detail.joint)"
-                           v-model="journal_paper_detail.joint[jt]"
-                           size="small"
-                           border
-                           :key="jt"
-                           >
-                {{joint_options[jt]}}
-              </el-checkbox>
-            </el-space>
-          </el-descriptions-item>
-          <el-descriptions-item label="原文链接" :span="4">
-            <el-link type="primary" :href="full_path">{{ full_path }}</el-link>
-          </el-descriptions-item>
-        </el-descriptions>
-        <el-divider></el-divider>
-        <el-descriptions direction="vertical" :column="2">
-          <el-descriptions-item label="期刊封面">
-            <el-image class="cover-image"
-                      :src="null"
-                      :preview-src-list="[null]"
-            ></el-image>
-          </el-descriptions-item>
-          <el-descriptions-item label="论文首页">
-            <el-image class="cover-image"
-                      :src="journal_paper_detail.home"
-                      :preview-src-list="[journal_paper_detail.home]"></el-image>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
-      <el-card shadow="hover" v-if="tjc === 'conference_paper'">
-        <el-descriptions :column="4">
-          <el-descriptions-item label="通信作者" :span="4">
-            <el-space v-if="!edit">
-              <el-tag v-for="au in conference_paper_detail.com_authors"
-                      :key="au.pk"
-                      type="info"
-              >
-                {{ au.name }}
-              </el-tag>
-            </el-space>
-            <UtilSelector class="table-input" multiple
-                          v-model="conference_paper_detail.com_authors"
-                          :getter="(q, r) => r(this.authors)"
-                          :render="callAuthorRender"
-                          v-if="edit" size="small"/>
-          </el-descriptions-item>
-          <el-descriptions-item label="期刊名称">
-            <template v-if="!edit"> {{ conference_paper_detail.conference.name }} ({{
-              conference_paper_detail.conference_date.getFullYear()
-              }}) </template>
-            <UtilSelector v-if="edit" class="table-input"
-                          v-model="conference_paper_detail.conference"
-                          :getter="callJournalListGet"
-                          :render="callJournalRender"
-                          size="small"/>
-          </el-descriptions-item>
-          <el-descriptions-item label="会议地点">
-            <template v-if="!edit">
-              {{ conference_paper_detail.conference_locate }}
             </template>
-            <el-input class="table-input" v-if="edit" v-model="conference_paper_detail.conference_locate" size="small">
-            </el-input>
-          </el-descriptions-item>
-          <el-descriptions-item label="会议日期">
-            <template v-if="!edit">{{ `${conference_paper_detail.conference_date.getFullYear()}-${conference_paper_detail.conference_date.getMonth() + 1}-${conference_paper_detail.conference_date.getDate()}` }}</template>
-            <el-date-picker v-if="edit" class="table-input" v-model="conference_paper_detail.conference_date"
-                            size="small"
-                            format="YYYY-M-D"/>
-          </el-descriptions-item>
-          <el-descriptions-item label="页码">
-            <template v-if="!edit"> {{conference_paper_detail.page}} </template>
-            <el-input class="table-input" v-if="edit" v-model="conference_paper_detail.page" size="small">
-            </el-input>
-          </el-descriptions-item>
-          <el-descriptions-item label="联合发表情况" :span="4">
-            <el-space v-if="!edit">
-              <el-tag v-for="jt in filterJoint"
-                      :key="jt"
-                      type="info"
-              >{{jt}}</el-tag>
-            </el-space>
-            <el-space v-if="edit">
-              <el-checkbox v-for="jt in Object.keys(conference_paper_detail.joint)"
-                           v-model="conference_paper_detail.joint[jt]"
-                           size="small"
-                           border
-                           :key="jt"
-              >
-                {{joint_options[jt]}}
-              </el-checkbox>
-            </el-space>
-          </el-descriptions-item>
-          <el-descriptions-item label="原文链接" :span="4">
-            <el-link type="primary" :href="full_path">{{ full_path }}</el-link>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
+            <template #extra>
+              <el-space>
+                <el-button type="primary" size="small" @click="handleSave" v-if="edit">保存</el-button>
+                <el-button type="primary" size="small" @click="toggleEdit" plain v-if="!edit">编辑</el-button>
+                <el-button type="info" size="small" @click="toggleEdit" v-if="edit">取消</el-button>
+                <el-button v-if="this.$route.params.id !== undefined" type="danger" size="small" plain>删除</el-button>
+              </el-space>
+            </template>
+            <el-descriptions-item label="论文编号">
+              <template v-if="!edit">{{ pk }}</template>
+              <el-input class="table-input" v-model="pk" size="small" v-if="edit"/>
+            </el-descriptions-item>
+            <el-descriptions-item :label="tjc === 'thesis' ? '结题时间' : '发表时间'" :span="1">
+              <template v-if="!edit">{{ date ? `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`:'未设置' }}</template>
+              <el-date-picker v-if="edit" class="table-input" v-model="date"
+                              size="small"
+                              format="YYYY-M-D"/>
+            </el-descriptions-item>
+            <el-descriptions-item label="是否推荐" :span="1">
+              <template v-if="!edit"> {{ favor ? '是' : '否' }}</template>
+              <el-check-tag v-if="edit" @change="() => {this.favor = !this.favor}" :checked="favor"
+              >{{ favor ? '推荐' : '不推荐' }}
+              </el-check-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="作者" :span="3">
+              <el-space v-if="!edit">
+                <el-tag type="info"
+                        v-for="au in authors"
+                        :key="au.pk"
+                >
+                  {{ au.name }}
+                </el-tag>
+              </el-space>
+              <UtilSelector class="table-input"
+                            :multiple="tjc !== 'thesis'"
+                            v-model="authors"
+                            :getter="callAuthorListGet"
+                            :render="callAuthorRender"
+                            v-if="edit" size="small"/>
+            </el-descriptions-item>
+            <el-descriptions-item label="研究方向" :span="3">
+              <el-space v-if="!edit">
+                <el-tag type="info"
+                        v-for="tp in topics"
+                        :key="tp.pk"
+                >
+                  {{ tp.name }}
+                </el-tag>
+              </el-space>
+              <UtilSelector class="table-input" multiple allow-new
+                            v-model="topics"
+                            :getter="callTopicListGet"
+                            :render="callTopicRender"
+                            :builder="callTopicBuilder"
+                            v-if="edit" size="small"/>
+            </el-descriptions-item>
+            <el-descriptions-item label="关键词" :span="3">
+              <el-space v-if="!edit">
+                <el-tag type="info"
+                        v-for="kw in keywords"
+                        :key="kw.pk"
+                >
+                  {{ kw.name }}
+                </el-tag>
+              </el-space>
+              <UtilSelector class="table-input" multiple allow-new
+                            v-model="keywords"
+                            :getter="callKeywordListGet"
+                            :render="callKeywordRender"
+                            :builder="callKeywordBuilder"
+                            v-if="edit" size="small"/>
+            </el-descriptions-item>
+          </el-descriptions>
+          <p class="main_text" v-if="!edit">
+            摘要：{{ intro }}
+          </p>
+          <div v-if="edit">
+            <p class="main_text">摘要：</p>
+            <el-input v-model="intro" type="textarea" :autosize="{minRows: 3}" clearable/>
+          </div>
+        </el-card>
+        <div class="row">
+          <el-card shadow="hover" v-if="tjc === 'thesis'">
+            <el-descriptions :column="4">
+              <el-descriptions-item label="录取导师">
+                <span v-if="!edit">{{ thesis_paper_detail.named_mentor }}</span>
+                <el-input class="table-input" v-model="thesis_paper_detail.named_mentor" size="small" v-if="edit" disabled/>
+              </el-descriptions-item>
+              <el-descriptions-item label="项目导师">
+                <span v-if="!edit">{{ thesis_paper_detail.proj_mentor }}</span>
+                <el-input class="table-input" v-model="thesis_paper_detail.proj_mentor" size="small" v-if="edit" disabled/>
+              </el-descriptions-item>
+              <el-descriptions-item label="查重率">
+                <span v-if="!edit"> {{ thesis_paper_detail.rate }}% </span>
+                <el-input class="table-input" v-model="thesis_paper_detail.rate" size="small" v-if="edit">
+                  <template #suffix>%</template>
+                </el-input>
+              </el-descriptions-item>
+              <el-descriptions-item label="论文类型">
+                <span v-if="!edit"> {{ thesis_paper_detail.type ? thesis_paper_detail.type.name : '' }} </span>
+                <UtilSelector class="table-input"
+                              v-model="thesis_paper_detail.type"
+                              :getter="callTypeListGet"
+                              :render="callTypeRender"
+                              v-if="edit" size="small"/>
+              </el-descriptions-item>
+              <el-descriptions-item :span="4" label="原文链接">
+                <el-link type="primary" :href="full_path">{{ full_path }}</el-link>
+              </el-descriptions-item>
+              <el-descriptions-item :span="4" label="PPT链接">
+                <el-link type="primary" :href="thesis_paper_detail.ppt">{{ thesis_paper_detail.ppt }}</el-link>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-card>
+          <el-card shadow="hover" v-if="tjc === 'journal_paper'">
+            <el-descriptions :column="4">
+              <el-descriptions-item label="通信作者" :span="4">
+                <el-space v-if="!edit">
+                  <el-tag v-for="au in journal_paper_detail.com_authors"
+                          :key="au.pk"
+                          type="info"
+                  >
+                    {{ au.name }}
+                  </el-tag>
+                </el-space>
+                <UtilSelector class="table-input" multiple
+                              v-model="journal_paper_detail.com_authors"
+                              :getter="(q, r) => r(this.authors)"
+                              :render="callAuthorRender"
+                              v-if="edit" size="small"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="期刊名称">
+                <template v-if="!edit"> {{ getJournalName }}</template>
+                <UtilSelector class="table-input"
+                              v-model="journal_paper_detail.journal"
+                              :getter="callJournalListGet"
+                              :render="callJournalRender"
+                              v-if="edit" size="small"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="年卷期" :span="2">
+                <template v-if="!edit">
+                  {{ journal_paper_detail.journal_yvn.y }}年 第{{journal_paper_detail.journal_yvn.v }}卷 第{{ journal_paper_detail.journal_yvn.n }}期
+                </template>
+                <el-space class="table-input" v-if="edit">
+                  <el-input v-model="journal_paper_detail.journal_yvn.y" size="small">
+                    <template #suffix>年</template>
+                  </el-input>
+                  <el-input v-model="journal_paper_detail.journal_yvn.v" size="small">
+                    <template #prefix>第</template>
+                    <template #suffix>卷</template>
+                  </el-input>
+                  <el-input v-model="journal_paper_detail.journal_yvn.n" size="small">
+                    <template #prefix>第</template>
+                    <template #suffix>期</template>
+                  </el-input>
+                </el-space>
+              </el-descriptions-item>
+              <el-descriptions-item label="页码">
+                <template v-if="!edit"> {{journal_paper_detail.page}} </template>
+                <el-input class="table-input" v-if="edit" v-model="journal_paper_detail.page" size="small">
+                </el-input>
+              </el-descriptions-item>
+              <el-descriptions-item label="联合发表情况" :span="4">
+                <el-space v-if="!edit">
+                  <el-tag v-for="jt in filterJoint"
+                          :key="jt"
+                          type="info"
+                  >{{jt}}</el-tag>
+                </el-space>
+                <el-space v-if="edit">
+                  <el-checkbox v-for="jt in Object.keys(journal_paper_detail.joint)"
+                               v-model="journal_paper_detail.joint[jt]"
+                               size="small"
+                               border
+                               :key="jt"
+                  >
+                    {{joint_options[jt]}}
+                  </el-checkbox>
+                </el-space>
+              </el-descriptions-item>
+              <el-descriptions-item label="原文链接" :span="4">
+                <el-link type="primary" :href="full_path">{{ full_path }}</el-link>
+              </el-descriptions-item>
+            </el-descriptions>
+            <el-divider></el-divider>
+            <el-descriptions direction="vertical" :column="2">
+              <el-descriptions-item label="期刊封面">
+                <el-image class="cover-image"
+                          :src="null"
+                          :preview-src-list="[null]"
+                ></el-image>
+              </el-descriptions-item>
+              <el-descriptions-item label="论文首页">
+                <el-image class="cover-image"
+                          :src="journal_paper_detail.home"
+                          :preview-src-list="[journal_paper_detail.home]"></el-image>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-card>
+          <el-card shadow="hover" v-if="tjc === 'conference_paper'">
+            <el-descriptions :column="4">
+              <el-descriptions-item label="通信作者" :span="4">
+                <el-space v-if="!edit">
+                  <el-tag v-for="au in conference_paper_detail.com_authors"
+                          :key="au.pk"
+                          type="info"
+                  >
+                    {{ au.name }}
+                  </el-tag>
+                </el-space>
+                <UtilSelector class="table-input" multiple
+                              v-model="conference_paper_detail.com_authors"
+                              :getter="(q, r) => r(this.authors)"
+                              :render="callAuthorRender"
+                              v-if="edit" size="small"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="会议名称">
+                <template v-if="!edit"> {{ conference_paper_detail.conference.name }} ({{
+                    conference_paper_detail.conference_date ? conference_paper_detail.conference_date.getFullYear() : ''
+                  }}) </template>
+                <UtilSelector v-if="edit" class="table-input"
+                              v-model="conference_paper_detail.conference"
+                              :getter="callJournalListGet"
+                              :render="callJournalRender"
+                              size="small"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="会议地点">
+                <template v-if="!edit">
+                  {{ conference_paper_detail.conference_locate }}
+                </template>
+                <el-input class="table-input" v-if="edit" v-model="conference_paper_detail.conference_locate" size="small">
+                </el-input>
+              </el-descriptions-item>
+              <el-descriptions-item label="会议日期">
+                <template v-if="!edit">{{ conference_paper_detail.conference_date ?`${conference_paper_detail.conference_date.getFullYear()}-${conference_paper_detail.conference_date.getMonth() + 1}-${conference_paper_detail.conference_date.getDate()}`:'未设置'}}</template>
+                <el-date-picker v-if="edit" class="table-input" v-model="conference_paper_detail.conference_date"
+                                size="small"
+                                format="YYYY-M-D"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="页码">
+                <template v-if="!edit"> {{conference_paper_detail.page}} </template>
+                <el-input class="table-input" v-if="edit" v-model="conference_paper_detail.page" size="small">
+                </el-input>
+              </el-descriptions-item>
+              <el-descriptions-item label="联合发表情况" :span="4">
+                <el-space v-if="!edit">
+                  <el-tag v-for="jt in filterJoint"
+                          :key="jt"
+                          type="info"
+                  >{{jt}}</el-tag>
+                </el-space>
+                <el-space v-if="edit">
+                  <el-checkbox v-for="jt in Object.keys(conference_paper_detail.joint)"
+                               v-model="conference_paper_detail.joint[jt]"
+                               size="small"
+                               border
+                               :key="jt"
+                  >
+                    {{joint_options[jt]}}
+                  </el-checkbox>
+                </el-space>
+              </el-descriptions-item>
+              <el-descriptions-item label="原文链接" :span="4">
+                <el-link type="primary" :href="full_path">{{ full_path }}</el-link>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-card>
+        </div>
+        <el-card class="row" shadow="hover" style="margin-bottom: 16px">
+          <el-descriptions :column="1">
+            <el-descriptions-item label="关联项目">
+              <el-space v-if="!edit">
+                <el-tag v-for="p in projects"
+                        :key="p.pk"
+                        type="info"
+                >
+                  {{ p.name }}
+                </el-tag>
+              </el-space>
+              <UtilSelector class="table-input"
+                            v-if="edit" v-model="projects"
+                            multiple
+                            :getter="callProjectListGet"
+                            :render="callProjectRender"
+                            size="small"/>
+            </el-descriptions-item>
+            <el-descriptions-item label="关联成果">
+              <el-space v-if="!edit">
+                <el-tag v-for="o in outcomes"
+                        :key="o.pk"
+                        type="info"
+                >
+                  {{ o.name }}
+                </el-tag>
+              </el-space>
+              <UtilSelector class="table-input"
+                            v-if="edit" v-model="outcomes"
+                            multiple
+                            :getter="callOutcomeListGet"
+                            :render="callOutcomeRender"
+                            size="small"/>
+            </el-descriptions-item>
+          </el-descriptions>
+        </el-card>
+      </el-scrollbar>
     </div>
-    <el-card class="row" shadow="hover">
-      <el-descriptions :column="1">
-        <el-descriptions-item label="关联项目">
-          <el-space v-if="!edit">
-            <el-tag v-for="p in projects"
-                    :key="p.pk"
-                    type="info"
-            >
-              {{ p.name }}
-            </el-tag>
-          </el-space>
-          <UtilSelector class="table-input"
-                        v-if="edit" v-model="projects"
-                        multiple
-                        :getter="callProjectListGet"
-                        :render="callProjectRender"
-                        size="small"/>
-        </el-descriptions-item>
-        <el-descriptions-item label="关联成果">
-          <el-space v-if="!edit">
-            <el-tag v-for="o in outcomes"
-                    :key="o.pk"
-                    type="info"
-            >
-              {{ o.name }}
-            </el-tag>
-          </el-space>
-          <UtilSelector class="table-input"
-                        v-if="edit" v-model="outcomes"
-                        multiple
-                        :getter="callOutcomeListGet"
-                        :render="callOutcomeRender"
-                        size="small"/>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
   </div>
 </template>
 
@@ -372,7 +378,7 @@ export default {
       pk: '',
       tjc: '',
       title: '',
-      date: new Date(),
+      date: null,
       intro: '',
       authors: [],
       keywords: [],
@@ -390,7 +396,7 @@ export default {
       },
       journal_paper_detail: {
         com_authors: [],
-        journal: {},
+        journal: null,
         journal_yvn: {y: '', v: '', n: ''},
         cover: '',
         page: '',
@@ -405,10 +411,10 @@ export default {
       },
       conference_paper_detail: {
         com_authors: [],
-        conference: {},
+        conference: null,
         conference_year: '',
         conference_locate: '',
-        conference_date: new Date(),
+        conference_date: null,
         page: '',
         joint: {
           isInduct: false,
@@ -421,7 +427,11 @@ export default {
     }
   },
   mounted() {
-    this.initData()
+    if(this.$route.params.id !== undefined){
+      this.initData()
+    }else{
+      this.edit = true
+    }
   },
   computed: {
     getTypeName() {
@@ -431,6 +441,9 @@ export default {
         conference_paper: "会议论文"
       }
       return valueDict[this.tjc]
+    },
+    getJournalName() {
+      return journalRender(this.journal_paper_detail.journal)
     },
     filterJoint() {
       let joint = {
@@ -489,7 +502,11 @@ export default {
     },
     toggleEdit() {
       if (this.edit) {
-        this.initData()
+        if (this.$route.params.id !== undefined){
+          this.initData()
+        }else{
+          this.$router.back();
+        }
       }
       this.edit = !this.edit;
     },
