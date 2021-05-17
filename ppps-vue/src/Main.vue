@@ -46,8 +46,8 @@
           </el-menu-item-group>
           <el-menu-item-group>
             <template #title>期刊会议管理</template>
-            <el-menu-item index="/paper/thesis_search">期刊会议搜索</el-menu-item>
-            <el-menu-item index="/paper/thesis_new">添加新期刊会议</el-menu-item>
+            <el-menu-item index="/paper/jc_search">期刊会议搜索</el-menu-item>
+            <el-menu-item index="/paper/jc_new">添加新期刊会议</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -58,7 +58,9 @@
         <span>欢迎你，观察者</span>
       </el-header>
       <el-main>
-        <router-view/>
+        <transition name="el-fade-in-linear">
+          <router-view :key="$route.path"> </router-view>
+        </transition>
       </el-main>
       <el-footer>北京邮电大学电子工程学院通信与网络研究中心（2021）</el-footer>
     </el-container>
@@ -96,7 +98,9 @@ html, body{
 }
 
 .el-main {
-  background-color: rgb(245, 248, 251)
+  background-color: rgb(245, 248, 251);
+  padding-bottom: 0;
+  overflow: hidden;
 }
 
 </style>
