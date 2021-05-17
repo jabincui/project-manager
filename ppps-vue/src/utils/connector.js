@@ -12,11 +12,20 @@ export function journalSave(valueDict, handleSuccess, handleError) {
         })
 }
 
-export function journalListGet(query, resultFunc) {
+export function journalListGet(query, option, resultFunc) {
     resultFunc(
         [
-            {pk: 'j123', name: '期刊J', ename: null, short_name: 'wer'},
-            {pk: 'j234', name: null, ename: 'JournalM'},
+            {pk: 'j123', name: '期刊J', ename: null, short_name: 'wer', deadline: 1618389187000, publish: 1625241600000},
+            {pk: 'j234', name: null, ename: 'JournalM', type: 'j', deadline: 1625241600000, publish: 1725241600000,
+                rate: [
+                    {pk: 'rgaofijaeoijf', name: '评级', rate: 'S+'},
+                    {pk: 'rgaofijasfdeoijf', name: 'wode评级', rate: '#+'},
+                    {pk: 'rgaogsfijaeoijf', name: 'qitade评级', rate: 'S+'},
+                ]},
+            {pk: 'jwer23', name: 'gdfsgs', ename: null, short_name: 'wer', type: 'c', deadline: 1118389187000, publish: 1218389187000},
+            {pk: 'j2erw434', name: null, ename: 'Jourwer34wernalM', type: 'j'},
+            {pk: 'j134523', name: '期fsadfaer刊J', ename: null, short_name: 'wer', type: 'c'},
+            {pk: 'j2terh34', name: 'faserew', ename: 'JouerwerrnalM', type: 'j'},
         ]
     )
 }
@@ -25,34 +34,56 @@ export function journalRender(item) {
     return `${!item.name ? item.ename : item.name}`
 }
 
-export function journalYVNGet(journal, resultFunc){
-    if(journal === 'j123'){
-        resultFunc([
-            {y: 2016, v: 23, n: 45},
-            {y: 2014, v: 25, n: 42},
-            {y: 2012, v: 26, n: 45},
-        ])
+export function journalDelete(pk){
+    console.info('delete', pk)
+}
+
+export function getJournalByUid(input){
+    if(input === 'j234'){
+        return {
+            pk: 'j234',
+            name: null,
+            ename: 'JournalM',
+            type: 'j',
+            short_name: 'wer',
+            rate: [
+                {pk: 'rgaofijasfdeoijf', name: 'wode评级', rate: '#+'},
+                {pk: 'rgaogsfijaeoijf', name: 'qitade评级', rate: 'S+'},
+            ],
+            history: [
+                {y: 1990, v: 23, n:1, cover: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'},
+                {y: 1990, v: 24, n:1, cover: ''},
+                {y: 1990, v: 25, n:1, cover: ''},
+                {y: 1990, v: 23, n:1, cover: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'},
+                {y: 1990, v: 24, n:1, cover: ''},
+                {y: 1990, v: 25, n:1, cover: ''},
+            ]
+        }
     }else{
-        resultFunc([
-            {y: 2049, v: 23, n: 45},
-            {y: 2346, v: 45345, n: 42},
-            {y: 1243, v: 2453453456, n: 435345354335},
-        ])
+        return {
+            pk: 'j14',
+            name: '我的期刊',
+            ename: null,
+            type: 'c',
+            rate: [
+                {pk: 'rgaofijaeoijf', name: '评级', rate: 'S+'},
+                {pk: 'rgaofijasfdeoijf', name: 'wode评级', rate: '#+'},
+            ],
+            history: [
+                {year: 1990, date: 1618389187000, place: ''},
+                {year: 1941, date: 1618389187000, place: ''},
+                {year: 1992, date: 1618389187000, place: ''},
+            ]
+        }
     }
 }
 
 export function rateListGet(query, resultFunc) {
-    axios.get(`rate_list_get/`,
-    )
-        .then(function (response) {
-            if (response.status === 200) {
-                resultFunc(response.data)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-            resultFunc([])
-        })
+    return resultFunc([
+        {pk: 'rgaofijaeoijf', name: '评级', rate: 'S+'},
+        {pk: 'rgaofijasfdeoijf', name: 'wode评级', rate: '#+'},
+        {pk: 'rgaogsfijaeoijf', name: 'qitade评级', rate: 'S+'},
+    ])
 }
 
 

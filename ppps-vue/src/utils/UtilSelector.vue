@@ -9,9 +9,9 @@
       :allow-create="allowNew"
       :size="size"
       :placeholder="placeholder"
-      :remote-method="remoteMethod"
+      :remote-method="debouncedClick"
       :loading="loading"
-      @focus="remoteMethod('')"
+      @focus="debouncedClick('')"
   >
     <el-option
         v-for="item in newOptions"

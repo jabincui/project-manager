@@ -102,25 +102,29 @@
         </el-form>
       </div>
     </el-collapse-transition>
-    <el-row style="margin-bottom: 8px" v-show="results.length !== 0">
-      <el-space>
-        <el-radio-group v-model="display" size="mini">
-          <el-radio-button label="卡片表示"></el-radio-button>
-          <el-radio-button label="表格表示"></el-radio-button>
-        </el-radio-group>
-        <el-button size="mini" >导出搜索结果</el-button>
-      </el-space>
-    </el-row>
+    <transition name="el-fade-in-linear">
+        <el-row style="margin-bottom: 8px" v-show="results.length !== 0">
+        <el-space>
+          <el-radio-group v-model="display" size="mini">
+            <el-radio-button label="卡片表示"></el-radio-button>
+            <el-radio-button label="表格表示"></el-radio-button>
+          </el-radio-group>
+          <el-button size="mini" >导出搜索结果</el-button>
+        </el-space>
+      </el-row>
+    </transition>
     <div style="flex:1; overflow: hidden" >
       <el-scrollbar>
-        <el-space direction="vertical">
-          <PaperSearchResult
-              v-for="item in results"
-              @click="this.$router.push(`/paper/search/${item.pk}`)"
-              :key="item.pk"
-              :re_data="item"
-          />
+        <el-collapse-transition>
+        <el-space direction="vertical" class="force_width">
+            <PaperSearchResult
+                v-for="item in results"
+                @click="this.$router.push(`/paper/search/${item.pk}`)"
+                :key="item.pk"
+                :re_data="item"
+            />
         </el-space>
+        </el-collapse-transition>
       </el-scrollbar>
     </div>
   </div>
@@ -199,4 +203,10 @@ export default {
 .row:last-child{
   margin-bottom: 0;
 }
+
+.force_width,
+.force_width > .el-space__item{
+  width: 100%;
+}
+
 </style>

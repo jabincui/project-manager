@@ -59,7 +59,7 @@
       </el-header>
       <el-main>
         <transition name="el-fade-in-linear">
-          <router-view :key="$route.path"/>
+          <router-view :key="$route.path"> </router-view>
         </transition>
       </el-main>
       <el-footer>北京邮电大学电子工程学院通信与网络研究中心（2021）</el-footer>

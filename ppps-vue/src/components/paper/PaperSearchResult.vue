@@ -1,19 +1,20 @@
 <template>
   <el-card shadow="hover">
-    <el-space class="row">
-      <el-tag>{{ getTypeName }}</el-tag>
-      <div style="font-size: 20px;"> {{ re_data.title }}</div>
-      <div v-for="item in re_data.author"
-           :key="item.pk"
-           style="font-size: 12px"
-      >
-        {{ item.name }}
-      </div>
-    </el-space>
-    <el-button circle
-               style="float: right"
-               :icon="re_data.favor ? 'el-icon-star-on' : 'el-icon-star-off'"
-               :type="re_data.favor ? 'warning' : null" />
+    <div class="row" style="display: flex">
+      <el-space style="flex: 1">
+        <el-tag>{{ getTypeName }}</el-tag>
+        <div style="font-size: 20px;"> {{ re_data.title }}</div>
+        <div v-for="item in re_data.author"
+             :key="item.pk"
+             style="font-size: 12px"
+        >
+          {{ item.name }}
+        </div>
+      </el-space>
+      <el-button circle
+                 :icon="re_data.favor ? 'el-icon-star-on' : 'el-icon-star-off'"
+                 :type="re_data.favor ? 'warning' : null" />
+    </div>
     <div class="row" style="font-size: 14px">
       <b>摘要：</b> {{re_data.intro}}
     </div>
